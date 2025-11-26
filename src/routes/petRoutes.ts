@@ -21,5 +21,11 @@ router.patch('/:id', petController.updatePet.bind(petController));
 // Delete a pet
 router.delete('/:id', petController.deletePet.bind(petController));
 
+// Get medical records for a specific pet (must be before /:id route)
+router.get('/:id/medical-records', petController.getPetMedicalRecords.bind(petController));
+
+// Create a new medical record for a specific pet (must be before /:id route)
+router.post('/:id/medical-records', petController.createPetMedicalRecord.bind(petController));
+
 export default router;
 

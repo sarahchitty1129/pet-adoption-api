@@ -34,11 +34,26 @@ CREATE TABLE applications (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+
+-- Create medical records table
+CREATE TABLE medical_records (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  pet_id UUID NOT NULL REFERENCES pets(id) ON DELETE CASCADE,
+  date DATE NOT NULL,
+  procedure VARCHAR(255) NOT NULL,
+  vet_name VARCHAR(100) NOT NULL,
+  notes TEXT,
+  cost DECIMAL(10,2),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Create indexes for better query performance
 CREATE INDEX idx_pets_status ON pets(status);
 CREATE INDEX idx_pets_type ON pets(type);
 CREATE INDEX idx_pets_created_at ON pets(created_at DESC);
 CREATE INDEX idx_applications_pet_id ON applications(pet_id);
+CREATE INDEX idx_medical_records_pet_id ON medical_records(pet_id);
 CREATE INDEX idx_applications_status ON applications(status);
 CREATE INDEX idx_applications_applicant_email ON applications(applicant_email);
 CREATE INDEX idx_applications_created_at ON applications(created_at DESC);
@@ -60,6 +75,11 @@ CREATE TRIGGER update_pets_updated_at
 
 CREATE TRIGGER update_applications_updated_at
   BEFORE UPDATE ON applications
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_medical_records_updated_at
+  BEFORE UPDATE ON medical_records
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 

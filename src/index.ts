@@ -3,6 +3,10 @@ import express, { Express, Request, Response } from 'express';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import petRoutes from './routes/petRoutes';
 import applicationRoutes from './routes/applicationRoutes';
+import medicalRecordsRoutes from './routes/medicalRecordsRoutes';
+
+// console.log('medicalRecordsRoutes:', medicalRecordsRoutes);
+// console.log('Type:', typeof medicalRecordsRoutes);
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -36,6 +40,7 @@ app.get('/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/pets', petRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/medical-records', medicalRecordsRoutes);
 
 // ============================================
 // Error Handling Middleware (must be last)

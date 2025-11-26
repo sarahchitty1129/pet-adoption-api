@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { petService } from '../services/petService';
 import { applicationService } from '../services/applicationService';
 import { CreatePetInput, UpdatePetInput, PetStatus } from '../types/pet';
+import { CreateMedicalRecordInput } from '../types/medical_record';
 import { AppError } from '../middleware/errorHandler';
+import { medicalService } from '../services/medicalService';
 
 export class PetController {
   /**
@@ -148,6 +150,33 @@ export class PetController {
       res.status(200).json({
         status: 'success',
         data: applications,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getPetMedicalRecords(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const medicalRecords = await medicalService.getMedicalRecordsByPetId(id);
+      res.status(200).json({
+        status: 'success',
+        data: medicalRecords,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async createPetMedicalRecord(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const input: CreateMedicalRecordInput = req.body;
+      const medicalRecord = await medicalService.createMedicalRecord(input);
+      res.status(201).json({
+        status: 'success',
+        data: medicalRecord,
       });
     } catch (error) {
       next(error);
